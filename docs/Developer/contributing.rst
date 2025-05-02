@@ -23,7 +23,7 @@ Setting Up Your Development Environment
 LupusOS uses GitHub for version control and collaboration. Follow these steps to set up Git:
 
 1. **Create a GitHub Account**: If you don’t have an account, sign up at `github.com <https://github.com>`_.
-2. **Fork LupusOS Repositories**: Fork the `main` and `core` repositories from `github.com/pisilinux` to your GitHub account.
+2. **Fork LupusOS Repositories**: Fork the `main` and `core` repositories from `github.com/LupusOS` to your GitHub account.
 3. **Clone Repositories Locally**:
    Create a working directory (e.g., `~/pisi-2.0`) and clone your forked repositories:
 
@@ -50,9 +50,9 @@ LupusOS uses GitHub for version control and collaboration. Follow these steps to
    .. code-block:: bash
 
       cd ~/pisi-2.0/main
-      git remote add upstream git@github.com:pisilinux/main.git
+      git remote add upstream git@github.com:LupusOS/main.git
       cd ~/pisi-2.0/core
-      git remote add upstream git@github.com:pisilinux/core.git
+      git remote add upstream git@github.com:LupusOS/core.git
 
 6. **Sync with Upstream**:
    Before starting work, pull the latest changes from the upstream repositories:
@@ -87,14 +87,14 @@ LupusOS uses Docker to provide a consistent build environment for packages. Foll
 
    .. code-block:: bash
 
-      sudo docker pull pisilinux/chroot
+      sudo docker pull LupusOS/chroot
 
 3. **Run Docker Container**:
    Mount your local directories and start the container:
 
    .. code-block:: bash
 
-      sudo docker run -v ~/pisi-2.0:/git -v ~/pisi-2.0/build:/root -v /var/cache/pisi/archives:/var/cache/pisi/archives -v /var/cache/pisi/packages:/var/cache/pisi/packages -itd --security-opt=seccomp:unconfined pisilinux/chroot bash
+      sudo docker run -v ~/pisi-2.0:/git -v ~/pisi-2.0/build:/root -v /var/cache/pisi/archives:/var/cache/pisi/archives -v /var/cache/pisi/packages:/var/cache/pisi/packages -itd --security-opt=seccomp:unconfined LupusOS/chroot bash
 
 4. **Access the Container**:
    Start and attach to the container:
@@ -201,7 +201,7 @@ To ensure high-quality contributions, test packages thoroughly and leverage cont
              uses: docker/setup-buildx-action@v2
            
            - name: Pull LupusOS chroot image
-             run: docker pull pisilinux/chroot
+             run: docker pull LupusOS/chroot
            
            - name: Build and test package
              run: |
@@ -210,7 +210,7 @@ To ensure high-quality contributions, test packages thoroughly and leverage cont
                  -v $(pwd)/build:/root \
                  -v /var/cache/pisi/archives:/var/cache/pisi/archives \
                  -v /var/cache/pisi/packages:/var/cache/pisi/packages \
-                 pisilinux/chroot bash -c "
+                 LupusOS/chroot bash -c "
                    service dbus start &&
                    cd /git &&
                    pisi ur &&
@@ -223,7 +223,7 @@ To ensure high-quality contributions, test packages thoroughly and leverage cont
     This workflow:
     - Checks out the repository.
     - Sets up Docker.
-    - Pulls the `pisilinux/chroot` image.
+    - Pulls the `LupusOS/chroot` image.
     - Builds the package, validates `pspec.xml`, installs the package, and checks dependencies.
   - Replace `<path-to-pspec.xml>` with the actual package path or use a script to detect modified packages.
 
@@ -260,7 +260,7 @@ To ensure high-quality contributions, test packages thoroughly and leverage cont
 1. **Create a Pull Request**:
    - Navigate to your forked repository on GitHub.
    - Select the repository (`main` or `core`) and click *New Pull Request*.
-   - Ensure the base repository is `pisilinux/<repository>` and the base branch is `master`.
+   - Ensure the base repository is `LupusOS/<repository>` and the base branch is `master`.
    - Review the changes and click *Create Pull Request*.
    - Provide a clear summary of your changes in the pull request description.
 
@@ -287,7 +287,7 @@ Community Resources
 
 LupusOS thrives on community collaboration. Engage with other contributors through the following channels:
 
-- **GitHub Repository**: `github.com/pisilinux <https://github.com/pisilinux>`_ (official repositories for `main` and `core`).
+- **GitHub Repository**: `github.com/LupusOS <https://github.com/LupusOS>`_ (official repositories for `main` and `core`).
 - **Community Forums**: LupusOS forums (to be confirmed).
 - **IRC Channel**: `#lupusos` on Libera.Chat (to be confirmed).
 - **Mailing List**: LupusOS developer mailing list (to be confirmed).
