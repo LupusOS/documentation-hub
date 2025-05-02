@@ -1,4 +1,4 @@
-..  .. LupusOS Contributing Guide
+.. LupusOS Contributing Guide
 
 Contributing to LupusOS
 ======================
@@ -148,7 +148,90 @@ Contribution Workflow
 
    Update `pspec.xml` with any missing dependencies and rebuild as needed.
 
-### 2. Commit Changes
+### 2. Testing and Continuous Integration
+
+To ensure high-quality contributions, test packages thoroughly and leverage continuous integration (CI) workflows where possible.
+
+- **Local Testing**:
+  - Validate package integrity using `pisi check`:
+    .. code-block:: bash
+    
+       pisi check <package-name>
+    
+    This verifies file consistency and detects corruption.
+  - Test package installation in a clean LupusOS environment using QEMU:
+    .. code-block:: bash
+    
+       qemu-system-x86_64 -cdrom lupusos.iso -m 2048 -hda test-disk.img
+       # Install and test the package in the QEMU environment
+    
+    Create a disk image for testing:
+    .. code-block:: bash
+    
+       qemu-img create -f qcow2 test-disk.img 20G
+    
+  - Check for file conflicts and dependency issues:
+    .. code-block:: bash
+    
+       pisi bi --check-file-conflicts
+       checkelf -s -x <package-file>.pisi
+
+- **Continuous Integration with GitHub Actions**:
+  - LupusOS may use GitHub Actions to automate package validation. A typical CI workflow builds packages, validates `pspec.xml`, and tests installation in a Docker container.
+  - Example GitHub Actions workflow (place in `.github/workflows/pisi-build.yml`):
+    .. code-block:: yaml
+    
+       name: PISI Package Build and Test
+       
+       on:
+         push:
+           branches: [ master ]
+         pull_request:
+           branches: [ master ]
+       
+       jobs:
+         build:
+           runs-on: ubuntu-latest
+           
+           steps:
+           - name: Checkout repository
+             uses: actions/checkout@v3
+           
+           - name: Set up Docker
+             uses: docker/setup-buildx-action@v2
+           
+           - name: Pull LupusOS chroot image
+             run: docker pull pisilinux/chroot
+           
+           - name: Build and test package
+             run: |
+               docker run --rm \
+                 -v $(pwd):/git \
+                 -v $(pwd)/build:/root \
+                 -v /var/cache/pisi/archives:/var/cache/pisi/archives \
+                 -v /var/cache/pisi/packages:/var/cache/pisi/packages \
+                 pisilinux/chroot bash -c "
+                   service dbus start &&
+                   cd /git &&
+                   pisi ur &&
+                   pisi bi -dy --ignore-safety /git/main/<path-to-pspec.xml> &&
+                   xmllint --valid /git/main/<path-to-pspec.xml> &&
+                   pisi it /var/cache/pisi/packages/*.pisi --ignore-safety &&
+                   checkelf -s -x /var/cache/pisi/packages/*.pisi
+                 "
+    
+    This workflow:
+    - Checks out the repository.
+    - Sets up Docker.
+    - Pulls the `pisilinux/chroot` image.
+    - Builds the package, validates `pspec.xml`, installs the package, and checks dependencies.
+  - Replace `<path-to-pspec.xml>` with the actual package path or use a script to detect modified packages.
+
+.. note::
+
+   **To be filled**: Confirm whether LupusOS uses GitHub Actions or another CI/CD system for package validation. Contributors should verify the official CI infrastructure and adapt the workflow (e.g., specific paths, additional tests) as needed.
+
+### 3. Commit Changes
 
 1. **Index Changes**:
    Add modified files to the Git index:
@@ -172,7 +255,7 @@ Contribution Workflow
 
       git push origin master
 
-### 3. Submit a Pull Request
+### 4. Submit a Pull Request
 
 1. **Create a Pull Request**:
    - Navigate to your forked repository on GitHub.
@@ -184,7 +267,7 @@ Contribution Workflow
 2. **Discuss and Revise**:
    Respond to feedback from maintainers. If new dependencies are introduced, open an issue for discussion before submitting the pull request.
 
-### 4. Clean Up
+### 5. Clean Up
 
 After building a package, clean up dependencies installed during testing:
 
