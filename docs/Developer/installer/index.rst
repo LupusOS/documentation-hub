@@ -3,7 +3,7 @@
 System Configuration and Installer Development
 =============================================
 
-This guide provides instructions for performing system configuration tasks on LupusOS, such as creating swap space, listing installed packages, and restoring packages on a new system. These tasks are essential for contributors working on system-level enhancements or preparing environments for LupusOS deployments. Additionally, this section serves as a placeholder for future documentation on LupusOS installer development, which may involve creating or modifying installation tools.
+This guide provides instructions for performing system configuration tasks on LupusOS, such as creating swap space, listing installed packages, and restoring packages on a new system. These tasks are essential for contributors working on system-level enhancements or preparing environments for LupusOS deployments. Additionally, this section serves as a placeholder for documentation on LupusOS installer development, which may involve creating or modifying installation tools.
 
 Overview
 --------
@@ -197,6 +197,60 @@ Currently, LupusOS does not have a dedicated installer package documented in thi
 4. **Submit Contributions**:
    Commit changes and submit a pull request with detailed documentation of the installer’s functionality and dependencies (see :doc:`../contributing`).
 
+### Developing the LupusOS Installer
+
+LupusOS may use a graphical or text-based installer to facilitate system deployment, such as Calamares (a common Linux installer framework) or a custom PISI-based tool. Contributors can enhance or develop installer components by creating PISI packages that integrate with the LupusOS ecosystem.
+
+**Steps for Contribution**:
+
+1. **Identify the Installer**:
+   Determine the installer framework used by LupusOS (e.g., Calamares, a custom script, or another tool). Consult the LupusOS community or repository for details.
+
+   .. note::
+
+      **To be filled**: Specific installer framework (e.g., Calamares, custom PISI-based installer) and its repository location need to be verified by the LupusOS community.
+
+2. **Create Installer Package**:
+   Develop a PISI package for the installer, including:
+   - `pspec.xml`: Specify dependencies (e.g., Qt for Calamares, PISI tools for custom installers).
+   - `actions.py`: Define build and installation steps using Actions API modules (e.g., `cmaketools` for Calamares).
+   - Configuration files or scripts for partitioning, package selection, and system setup.
+
+   **Example** `pspec.xml` snippet for a hypothetical installer:
+
+   .. code-block:: xml
+
+      <Package>
+          <Name>lupusos-installer</Name>
+          <RuntimeDependencies>
+              <Dependency>qt5-base</Dependency>
+              <Dependency>pisi</Dependency>
+          </RuntimeDependencies>
+          <Files>
+              <Path fileType="executable">/usr/bin</Path>
+              <Path fileType="data">/usr/share/lupusos-installer</Path>
+          </Files>
+      </Package>
+
+3. **Test in a Virtual Machine**:
+   Use QEMU or VirtualBox to test the installer package:
+
+   .. code-block:: bash
+
+      qemu-system-x86_64 -cdrom lupusos.iso -m 2048
+
+   Verify that the installer correctly partitions disks, installs packages, and configures the bootloader.
+
+4. **Document Features**:
+   Document the installer’s features (e.g., supported filesystems, network configuration options) in the pull request and `pspec.xml` `<Summary>` and `<Description>` tags.
+
+5. **Engage the Community**:
+   Open a GitHub issue to discuss installer enhancements before submitting a pull request. Seek feedback on features like live CD support or advanced partitioning.
+
+   .. note::
+
+      **To be filled**: Official LupusOS installer repository, specific feature requirements (e.g., live CD, UEFI support), and community discussion channels need to be confirmed.
+
 Future documentation will expand this section as installer development progresses. Contributors are encouraged to open issues on the LupusOS GitHub repository to discuss new installer features.
 
 Best Practices
@@ -214,7 +268,7 @@ Best Practices
 - **Validate Swap**:
    After creating swap space, verify its functionality with `swapon -s` and monitor system performance.
 - **Use PISI Commands**:
-   Rely on `pisi` commands for package management to ensure compatibility with LupusasOS’s package system.
+   Rely on `pisi` commands for package management to ensure compatibility with LupusOS’s package system.
 - **Document Changes**:
    Include detailed notes in pull requests or package history for system configuration changes.
 - **Discuss New Features**:
