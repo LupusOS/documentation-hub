@@ -1,4 +1,4 @@
-.. LupusOS Contributing Guide
+..  .. LupusOS Contributing Guide
 
 Contributing to LupusOS
 ======================
@@ -198,6 +198,23 @@ Stop and remove the Docker container when done:
 
    sudo docker stop <container-id>
    sudo docker rm <container-id>
+
+Community Resources
+------------------
+
+LupusOS thrives on community collaboration. Engage with other contributors through the following channels:
+
+- **GitHub Repository**: `github.com/pisilinux <https://github.com/pisilinux>`_ (official repositories for `main` and `core`).
+- **Community Forums**: LupusOS forums (to be confirmed).
+- **IRC Channel**: `#lupusos` on Libera.Chat (to be confirmed).
+- **Mailing List**: LupusOS developer mailing list (to be confirmed).
+- **Developer Portal**: LupusOS developer portal (to be confirmed, e.g., `developer.lupusos.org`).
+
+.. note::
+
+   **To be filled**: The official community channels (forums, IRC, mailing list, developer portal) need to be verified by the LupusOS community. Contributors should check the LupusOS website or GitHub for up-to-date contact information.
+
+Join these channels to discuss packaging issues, propose new features, or seek assistance with contributions.
 
 Best Practices
 -------------
