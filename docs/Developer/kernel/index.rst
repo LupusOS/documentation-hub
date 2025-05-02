@@ -38,7 +38,7 @@ Setting Up the Environment
       cd ~/lupus-1
       git clone git@github.com:<your-username>/core.git
       cd core
-      git remote add upstream git@github.com:pisilinux/core.git
+      git remote add upstream git@github.com:LupusOS/core.git
       git pull upstream master
 
 2. **Set Up Docker**:
@@ -47,8 +47,8 @@ Setting Up the Environment
    .. code-block:: bash
 
       sudo service docker start
-      sudo docker pull pisilinux/chroot
-      sudo docker run -v ~/lupus-1:/git -v ~/lupus-1/build:/root -v /var/cache/pisi/archives:/var/cache/pisi/archives -v /var/cache/pisi/packages:/var/cache/pisi/packages -itd --security-opt=seccomp:unconfined pisilinux/chroot bash
+      sudo docker pull LupusOS/chroot
+      sudo docker run -v ~/lupus-1:/git -v ~/lupus-1/build:/root -v /var/cache/pisi/archives:/var/cache/pisi/archives -v /var/cache/pisi/packages:/var/cache/pisi/packages -itd --security-opt=seccomp:unconfined LupusOS/chroot bash
       sudo docker start <container-id>
       sudo docker attach <container-id>
       service dbus start
