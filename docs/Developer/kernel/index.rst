@@ -252,6 +252,52 @@ Best Practices
 - **Use Spaces**: In `actions.py` and `pspec.xml`, use spaces instead of tabs for indentation.
 - **Discuss New Features**: Open an issue to discuss new kernel modules or configuration changes before submitting a pull request.
 
+### Security Best Practices
+
+To enhance the security of the LupusOS kernel, follow these guidelines:
+
+- **Enable Security Features**:
+  - Configure the kernel with security-related options, such as:
+    - `CONFIG_SECURITY`: Enables the security framework for access control.
+    - `CONFIG_SECCOMP`: Supports seccomp filtering for syscall restrictions.
+    - `CONFIG_HARDENED_USERCOPY`: Prevents kernel memory corruption.
+    - `CONFIG_STACKPROTECTOR`: Enables stack-smashing protection.
+  - Example configuration in `actions.py`:
+    .. code-block:: python
+    
+       def setup():
+           kerneltools.configure()
+           # Edit .config to enable security options
+           shelltools.system("sed -i 's/# CONFIG_SECCOMP is not set/CONFIG_SECCOMP=y/' .config")
+           kerneltools.updateKConfig()
+
+- **Sign Kernel Modules**:
+  - For systems with secure boot enabled, sign kernel modules to ensure compatibility.
+  - Generate a signing key and sign modules during the build:
+    .. code-block:: bash
+    
+       openssl req -new -x509 -newkey rsa:2048 -keyout MOK.priv -outform DER -out MOK.der -nodes -days 36500 -subj "/CN=LupusOS/"
+       scripts/sign-file sha256 MOK.priv MOK.der <module>.ko
+    
+    Add the public key to the system’s MOK (Machine Owner Key) database during installation.
+
+  .. note::
+  
+     **To be filled**: Confirm whether LupusOS supports secure boot and the specific process for enrolling MOK keys. Contributors should verify secure boot requirements in the LupusOS documentation or community.
+
+- **Monitor CVEs**:
+  - Check for kernel vulnerabilities using CVE databases (e.g., `cve.mitre.org`) or tools like `cve-check-tool` (if available).
+  - Apply upstream patches for critical CVEs and document them in `pspec.xml` `<History>`:
+    .. code-block:: xml
+    
+       <Update release="2">
+           <Date>2025-05-03</Date>
+           <Version>5.15.3</Version>
+           <Comment>Applied patch for CVE-2025-5678</Comment>
+           <Name>LupusOS Community</Name>
+           <Email>admins@lupusos.org</Email>
+       </Update>
+
 Kerneltools Reference
 --------------------
 
