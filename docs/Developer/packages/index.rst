@@ -40,7 +40,7 @@ Creating a PISI package involves the following steps:
          ├── package.py
          └── service.py
      ```
-   - Copy template `pspec.xml`, `actions.py`, and `translations.xml` files from the LupusOS documentation or repository (e.g., `developer.pisilinux.org` equivalents).
+   - Copy template `pspec.xml`, `actions.py`, and `translations.xml` files from the LupusOS documentation or repository (e.g., `developer.lupusos.org` equivalents).
    - Customize `pspec.xml` with package details (e.g., name, version, source URL, dependencies).
    - Adapt `actions.py` to the software’s build system.
    - Add translations to `translations.xml` for localized summaries and descriptions.
@@ -114,6 +114,52 @@ To ensure consistency and reliability, adhere to the following guidelines:
   .. code-block:: bash
   
      revdep-rebuild -p <package-name>
+
+### Security Best Practices
+
+To ensure the security of LupusOS packages, follow these guidelines:
+
+- **Verify Source Checksums**:
+  - Always compare the SHA1 checksum of the source archive against the official checksum provided by the upstream project to prevent supply chain attacks.
+  - Example:
+    .. code-block:: bash
+    
+       sha1sum /var/cache/pisi/archives/<source-archive>
+       # Compare with upstream checksum from the project’s website
+
+- **Check for CVEs**:
+  - Before packaging, check for known vulnerabilities in the software or its dependencies using tools like `cve-check-tool` (if available in LupusOS) or online CVE databases (e.g., `cve.mitre.org`).
+  - Example:
+    .. code-block:: bash
+    
+       cve-check-tool <package-name>
+    
+    .. note::
+    
+       **To be filled**: Confirm whether `cve-check-tool` or similar tools are available in LupusOS repositories. If unavailable, contributors should consult CVE databases manually.
+
+- **Set Secure Permissions**:
+  - Restrict executable file permissions in `pspec.xml` to prevent unauthorized access. For example, use `fileType="executable"` only for necessary binaries.
+  - Example `pspec.xml`:
+    .. code-block:: xml
+    
+       <Files>
+           <Path fileType="executable" permission="0755">/usr/bin/<binary></Path>
+           <Path fileType="data" permission="0644">/usr/share/<package></Path>
+       </Files>
+
+- **Monitor Upstream Security Advisories**:
+  - Subscribe to the software’s security mailing list or check its website for advisories before packaging new versions.
+  - Document any addressed CVEs in the `pspec.xml` `<History>` section:
+    .. code-block:: xml
+    
+       <Update release="2">
+           <Date>2025-05-03</Date>
+           <Version>1.2.3</Version>
+           <Comment>Fixed CVE-2025-1234</Comment>
+           <Name>LupusOS Community</Name>
+           <Email>admins@lupusos.org</Email>
+       </Update>
 
 Example Build Files
 ------------------
@@ -246,6 +292,60 @@ Troubleshooting
   - Update `pspec.xml` and rebuild.
 - **XML Errors**:
   - Validate `pspec.xml` with `xmllint --valid pspec.xml` to catch syntax issues.
+
+### PISI Tools and Debugging
+
+LupusOS provides additional PISI commands to streamline packaging and troubleshoot issues. Below are key tools and debugging strategies:
+
+- **pisi delta**:
+  - Creates delta packages to reduce download sizes by packaging only the differences between two package versions.
+  - Example:
+    .. code-block:: bash
+    
+       pisi delta old-package.pisi new-package.pisi
+    
+    This generates a `.delta.pisi` file for efficient updates.
+
+- **pisi graph**:
+  - Visualizes package dependencies as a graph, useful for identifying dependency loops or missing dependencies.
+  - Example:
+    .. code-block:: bash
+    
+       pisi graph <package-name> > dependencies.dot
+       dot -Tpng dependencies.dot -o dependencies.png
+    
+    This creates a visual dependency graph.
+
+- **pisi check**:
+  - Validates installed packages for file integrity and consistency.
+  - Example:
+    .. code-block:: bash
+    
+       pisi check <package-name>
+    
+    This reports any corrupted or missing files.
+
+- **Debugging Common Issues**:
+  - **Dependency Loops**:
+    - Use `pisi graph` to identify circular dependencies.
+    - Adjust `<BuildDependencies>` or `<RuntimeDependencies>` in `pspec.xml` to break loops.
+  - **File Conflicts**:
+    - Check for overlapping file paths in `pspec.xml` using:
+      .. code-block:: bash
+      
+         pisi bi --check-file-conflicts
+         
+    - Modify `<Files>` to ensure unique paths.
+  - **Build Failures**:
+    - Review build logs in `/var/log/pisi` for detailed error messages.
+    - Test builds with verbose output:
+      .. code-block:: bash
+      
+         pisi bi -d --verbose /git/main/<path-to-pspec.xml>
+
+.. note::
+
+   **To be filled**: Confirm the availability of `pisi delta`, `pisi graph`, and `pisi check` in the current LupusOS PISI implementation. Contributors should verify these commands in the LupusOS repository or documentation.
 
 For advanced debugging, consult the LupusOS community or open an issue on GitHub.
 
