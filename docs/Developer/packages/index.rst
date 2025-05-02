@@ -30,16 +30,19 @@ Creating a PISI package involves the following steps:
 
 2. **Prepare Build Files**:
    - Create a directory structure for the package:
-     ```
-     package_name/
-     ├── pspec.xml
-     ├── actions.py
-     ├── translations.xml
-     ├── files/
-     └── comar/
-         ├── package.py
-         └── service.py
-     ```
+
+     .. code-block:: none
+
+        package_name/
+            ├── pspec.xml
+            ├── actions.py
+            ├── translations.xml
+            ├── files/
+            │   └── [patch or config files]
+            └── comar/
+                ├── package.py
+                └── service.py
+
    - Copy template `pspec.xml`, `actions.py`, and `translations.xml` files from the LupusOS documentation or repository (e.g., `developer.lupusos.org` equivalents).
    - Customize `pspec.xml` with package details (e.g., name, version, source URL, dependencies).
    - Adapt `actions.py` to the software’s build system.
