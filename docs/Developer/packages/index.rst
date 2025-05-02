@@ -161,6 +161,144 @@ To ensure the security of LupusOS packages, follow these guidelines:
            <Email>admins@lupusos.org</Email>
        </Update>
 
+### Advanced Packaging Scenarios
+
+For complex packaging needs, LupusOS supports advanced scenarios such as multi-architecture packages, conditional dependencies, and cross-compilation.
+
+- **Multi-Architecture Packages**:
+  - Specify supported architectures in `pspec.xml` using the `<Architecture>` tag to restrict package builds to specific platforms (e.g., `x86_64`, `i686`).
+  - Example `pspec.xml`:
+    .. code-block:: xml
+    
+       <Source>
+           <Name>example-package</Name>
+           <Architecture>x86_64</Architecture>
+           <Architecture>i686</Architecture>
+           <!-- Other metadata -->
+       </Source>
+    
+    Use `get.ARCH()` in `actions.py` to adapt build steps for different architectures:
+    .. code-block:: python
+    
+       from pisi.actionsapi import get
+       from pisi.actionsapi import autotools
+       
+       def setup():
+           if get.ARCH() == "x86_64":
+               autotools.configure("--enable-64bit")
+           else:
+               autotools.configure("--enable-32bit")
+
+- **Conditional Dependencies**:
+  - Use the `condition` attribute in `<Dependency>` tags to specify dependencies that apply only under certain conditions (e.g., specific kernel versions or optional features).
+  - Example `pspec.xml`:
+    .. code-block:: xml
+    
+       <Package>
+           <Name>example-package</Name>
+           <RuntimeDependencies>
+               <Dependency condition="kernel_version >= 5.15">libnftables</Dependency>
+               <Dependency condition="feature_opengl">mesa</Dependency>
+           </RuntimeDependencies>
+           <!-- Other package details -->
+       </Package>
+    
+    .. note::
+    
+       **To be filled**: Confirm the syntax and supported conditions for the `condition` attribute in LupusOS’s PISI implementation. Contributors should verify with the LupusOS PISI documentation.
+
+- **Cross-Compilation**:
+  - For packages targeting different architectures (e.g., ARM on an x86_64 host), configure the build environment with cross-compilation tools and set appropriate flags in `actions.py`.
+  - Example `actions.py` for cross-compiling a library:
+    .. code-block:: python
+    
+       from pisi.actionsapi import autotools
+       from pisi.actionsapi import get
+       
+       def setup():
+           autotools.configure(
+               "--host=arm-linux-gnueabihf",
+               "--prefix=/usr",
+               "CC=arm-linux-gnueabihf-gcc",
+               "CXX=arm-linux-gnueabihf-g++"
+           )
+       
+       def build():
+           autotools.make()
+       
+       def install():
+           autotools.rawInstall("DESTDIR=%s" % get.installDIR())
+    
+    Ensure the cross-compilation toolchain (e.g., `arm-linux-gnueabihf-gcc`) is installed in the build environment:
+    .. code-block:: bash
+    
+       sudo pisi it cross-arm-gcc
+
+    .. note::
+    
+       **To be filled**: Confirm the availability of cross-compilation toolchains in LupusOS repositories and the specific `--host` triplets supported. Contributors should check the LupusOS toolchain documentation.
+
+### Versioning and Changelog Standards
+
+To maintain consistency and traceability, follow these guidelines for versioning and changelogs in `pspec.xml`:
+
+- **Versioning Conventions**:
+  - Use the upstream software version (e.g., `1.2.3`) as the `<Version>` in `pspec.xml`.
+  - For LupusOS-specific patches or rebuilds, append a release number (e.g., `1.2.3-1`, `1.2.3-2`) in the `<Update release>` attribute.
+  - Example:
+    .. code-block:: xml
+    
+       <Source>
+           <Name>example-package</Name>
+           <Version>1.2.3</Version>
+           <!-- Other metadata -->
+       </Source>
+       <History>
+           <Update release="2">
+               <Date>2025-05-03</Date>
+               <Version>1.2.3</Version>
+               <Comment>Applied LupusOS-specific patch for compatibility</Comment>
+               <Name>LupusOS Community</Name>
+               <Email>admins@lupusos.org</Email>
+           </Update>
+           <Update release="1">
+               <Date>2025-04-01</Date>
+               <Version>1.2.3</Version>
+               <Comment>Initial release</Comment>
+               <Name>LupusOS Community</Name>
+               <Email>admins@lupusos.org</Email>
+           </Update>
+       </History>
+
+- **Changelog Format**:
+  - Each `<Update>` entry in the `<History>` section must include:
+    - `release`: Incremental number for each update (e.g., `1`, `2`).
+    - `Date`: ISO format (e.g., `2025-05-03`).
+    - `Version`: Upstream version or patched version.
+    - `Comment`: Detailed description of changes (e.g., “Fixed CVE-2025-1234”, “Updated to version 1.2.3”, “Added support for feature X”).
+    - `Name`: Packager’s name or “LupusOS Community”.
+    - `Email`: Packager’s email or `admins@lupusos.org`.
+  - Use clear, concise `<Comment>` entries to document bug fixes, security updates, or new features.
+  - Example:
+    .. code-block:: xml
+    
+       <Update release="3">
+           <Date>2025-06-01</Date>
+           <Version>1.2.4</Version>
+           <Comment>Updated to version 1.2.4, fixed CVE-2025-5678</Comment>
+           <Name>LupusOS Community</Name>
+           <Email>admins@lupusos.org</Email>
+       </Update>
+
+- **Best Practices**:
+  - Increment the `release` number for each update, even if the upstream version remains unchanged.
+  - Document all changes, including minor patches, in the `<History>` section for transparency.
+  - Align versioning with upstream releases unless LupusOS-specific modifications require divergence.
+
+.. note::
+
+   **To be filled**: Confirm LupusOS’s official versioning policy (e.g., handling snapshot releases, pre-release versions). Contributors should consult the LupusOS packaging guidelines or community for specific conventions.
+
 Example Build Files
 ------------------
 
