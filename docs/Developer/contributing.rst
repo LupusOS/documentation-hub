@@ -25,12 +25,12 @@ LupusOS uses GitHub for version control and collaboration. Follow these steps to
 1. **Create a GitHub Account**: If you don’t have an account, sign up at `github.com <https://github.com>`_.
 2. **Fork LupusOS Repositories**: Fork the `main` and `core` repositories from `github.com/LupusOS` to your GitHub account.
 3. **Clone Repositories Locally**:
-   Create a working directory (e.g., `~/pisi-2.0`) and clone your forked repositories:
+   Create a working directory (e.g., `~/lupus-1`) and clone your forked repositories:
 
    .. code-block:: bash
 
-      mkdir ~/pisi-2.0
-      cd ~/pisi-2.0
+      mkdir ~/lupus-1
+      cd ~/lupus-1
       git clone git@github.com:<your-username>/main.git
       git clone git@github.com:<your-username>/core.git
 
@@ -49,9 +49,9 @@ LupusOS uses GitHub for version control and collaboration. Follow these steps to
 
    .. code-block:: bash
 
-      cd ~/pisi-2.0/main
+      cd ~/lupus-1/main
       git remote add upstream git@github.com:LupusOS/main.git
-      cd ~/pisi-2.0/core
+      cd ~/lupus-1/core
       git remote add upstream git@github.com:LupusOS/core.git
 
 6. **Sync with Upstream**:
@@ -94,7 +94,7 @@ LupusOS uses Docker to provide a consistent build environment for packages. Foll
 
    .. code-block:: bash
 
-      sudo docker run -v ~/pisi-2.0:/git -v ~/pisi-2.0/build:/root -v /var/cache/pisi/archives:/var/cache/pisi/archives -v /var/cache/pisi/packages:/var/cache/pisi/packages -itd --security-opt=seccomp:unconfined LupusOS/chroot bash
+      sudo docker run -v ~/lupus-1:/git -v ~/lupus-1/build:/root -v /var/cache/pisi/archives:/var/cache/pisi/archives -v /var/cache/pisi/packages:/var/cache/pisi/packages -itd --security-opt=seccomp:unconfined LupusOS/chroot bash
 
 4. **Access the Container**:
    Start and attach to the container:
