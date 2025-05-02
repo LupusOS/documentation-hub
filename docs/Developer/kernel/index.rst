@@ -34,8 +34,8 @@ Setting Up the Environment
 
    .. code-block:: bash
 
-      mkdir ~/pisi-2.0
-      cd ~/pisi-2.0
+      mkdir ~/lupus-1
+      cd ~/lupus-1
       git clone git@github.com:<your-username>/core.git
       cd core
       git remote add upstream git@github.com:pisilinux/core.git
@@ -48,7 +48,7 @@ Setting Up the Environment
 
       sudo service docker start
       sudo docker pull pisilinux/chroot
-      sudo docker run -v ~/pisi-2.0:/git -v ~/pisi-2.0/build:/root -v /var/cache/pisi/archives:/var/cache/pisi/archives -v /var/cache/pisi/packages:/var/cache/pisi/packages -itd --security-opt=seccomp:unconfined pisilinux/chroot bash
+      sudo docker run -v ~/lupus-1:/git -v ~/lupus-1/build:/root -v /var/cache/pisi/archives:/var/cache/pisi/archives -v /var/cache/pisi/packages:/var/cache/pisi/packages -itd --security-opt=seccomp:unconfined pisilinux/chroot bash
       sudo docker start <container-id>
       sudo docker attach <container-id>
       service dbus start
