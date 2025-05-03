@@ -78,7 +78,7 @@ The documentation will be available in the `_build/html/` directory.
 
 We welcome contributions to improve the LupusOS documentation! Whether you're fixing typos, adding new sections, or updating guides, your efforts help the community.
 
-To get started, see the [contribution guidelines](docs/Developer/contributing.rst) for detailed instructions on submitting pull requests and collaborating with the LupusOS community.
+To get started, see the [contribution guidelines](https://lupusos-documentation.readthedocs.io/en/latest/Developer/contributing.html) for detailed instructions on submitting pull requests and collaborating with the LupusOS community.
 
 > **Note:** Verify the official LupusOS community channels (e.g., forums, IRC, mailing list). Contributors should check the LupusOS website or GitHub for up-to-date contact information.
 
