@@ -6,7 +6,7 @@ The documentation is built using [Sphinx](https://www.sphinx-doc.org/) and hoste
 
 ## 📚 Online Documentation
 
-📖 View the full documentation at: [https://docs.lupusos.org](https://docs.lupusos.org)
+📖 View the full documentation at: [lupusos-documentation](https://lupusos-documentation.readthedocs.io/en/latest/index.html)
 
 > **Note:** Confirm the official Read the Docs URL for LupusOS documentation. Contributors should check the LupusOS website or GitHub for the correct link.
 
